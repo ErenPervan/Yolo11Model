@@ -1,0 +1,58 @@
+# Ultralytics YOLO 🚀, Custom Model for Pothole Segmentation
+# DSConv + SimAM + GELU entegreli TAMAMEN CUSTOM model
+#
+# Bu YAML dosyası custom modüllerimizi kullanır:
+# - C3k2_DSConv: DSConv tabanlı feature extraction
+# - SimAM: Parameter-free attention
+# - ConvGELU: GELU aktivasyonlu konvolüsyon
+# - SPPF_SimAM: SimAM entegreli spatial pyramid pooling
+
+# Model parametreleri
+nc: 1  # Sınıf sayısı (pothole - çukur)
+
+# Backbone - Custom DSConv modülleri ile
+backbone:
+  # [from, repeats, module, args]
+  # args format: [out_channels, ...]
+  
+  - [-1, 1, ConvGELU, [32, 3, 2]]                  # 0 - P1/2 - Stem
+  - [-1, 1, ConvGELU, [64, 3, 2]]                  # 1 - P2/4
+  - [-1, 2, C3k2_DSConv, [128, 1, False, 0.25]]    # 2 - DSConv block
+  - [-1, 1, ConvGELU, [128, 3, 2]]                 # 3 - P3/8
+  - [-1, 2, C3k2_DSConv, [256, 1, False, 0.25]]    # 4 - DSConv block
+  - [-1, 1, ConvGELU, [256, 3, 2]]                 # 5 - P4/16
+  - [-1, 2, C3k2_DSConv, [512, 2, True]]           # 6 - DSConv block (deeper)
+  - [-1, 1, ConvGELU, [512, 3, 2]]                 # 7 - P5/32
+  - [-1, 2, C3k2_DSConv, [512, 2, True]]           # 8 - DSConv block
+  - [-1, 1, SPPF_SimAM, [512, 5]]                  # 9 - SPPF + SimAM
+  - [-1, 2, PSA_DSConv, [512]]                     # 10 - Position-Sensitive Attention
+
+# Head - Segmentation için FPN + PAN yapısı
+head:
+  # Upsample + Feature Fusion
+  - [-1, 1, nn.Upsample, [None, 2, "nearest"]]    # 11 - Upsample
+  - [[-1, 6], 1, Concat, [1]]                      # 12 - cat backbone P4
+  - [-1, 2, C3k2_DSConv, [256, 1, False]]          # 13 - Feature processing
+
+  - [-1, 1, nn.Upsample, [None, 2, "nearest"]]    # 14 - Upsample
+  - [[-1, 4], 1, Concat, [1]]                      # 15 - cat backbone P3
+  - [-1, 2, C3k2_DSConv, [128, 1, False]]          # 16 - P3/8-small output
+
+  # PAN (bottom-up)
+  - [-1, 1, ConvGELU, [128, 3, 2]]                 # 17 - Downsample
+  - [[-1, 13], 1, Concat, [1]]                     # 18 - cat head P4
+  - [-1, 2, C3k2_DSConv, [256, 1, False]]          # 19 - P4/16-medium output
+
+  - [-1, 1, ConvGELU, [256, 3, 2]]                 # 20 - Downsample
+  - [[-1, 10], 1, Concat, [1]]                     # 21 - cat head P5
+  - [-1, 2, C3k2_DSConv, [512, 2, True]]           # 22 - P5/32-large output
+
+  # Segmentation Head
+  - [[16, 19, 22], 1, Segment, [nc, 32, 256]]      # 23 - Segment(P3, P4, P5)
+
+# Notlar:
+# - C3k2_DSConv args: [channels, n_bottleneck, c3k_mode, expansion]
+# - ConvGELU args: [channels, kernel_size, stride]
+# - SPPF_SimAM args: [channels, pool_kernel_size]
+# - PSA_DSConv args: [channels]
+

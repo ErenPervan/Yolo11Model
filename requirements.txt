@@ -1,0 +1,43 @@
+# Pothole Segmentation Model - Requirements
+# ==========================================
+# Bu dosya, çukur segmentasyon modelini çalıştırmak için
+# gerekli Python paketlerini içerir.
+
+# Core
+torch>=2.0.0
+torchvision>=0.15.0
+
+# Ultralytics YOLO
+ultralytics>=8.3.0
+
+# Genel bağımlılıklar
+numpy>=1.23.0
+opencv-python>=4.8.0
+Pillow>=9.4.0
+PyYAML>=6.0
+tqdm>=4.65.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+pandas>=2.0.0
+scipy>=1.10.0
+
+# Eğitim için
+tensorboard>=2.13.0
+# clearml  # Opsiyonel: deney takibi
+
+# ONNX export (opsiyonel)
+onnx>=1.14.0
+onnxruntime>=1.15.0
+
+# Git (versiyon kontrolü)
+gitpython>=3.1.0
+
+# Typing ve utilities
+typing-extensions>=4.5.0
+requests>=2.31.0
+psutil>=5.9.0
+
+# Colab için (opsiyonel)
+# google-colab
+# gdown
+

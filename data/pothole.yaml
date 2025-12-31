@@ -1,0 +1,42 @@
+# Pothole Dataset Configuration
+# ==============================
+# Bu dosyayı kendi veri setinize göre düzenleyin.
+#
+# Veri seti yapısı:
+# data/
+# ├── images/
+# │   ├── train/
+# │   │   ├── img001.jpg
+# │   │   └── ...
+# │   └── val/
+# │       ├── img001.jpg
+# │       └── ...
+# └── labels/
+#     ├── train/
+#     │   ├── img001.txt
+#     │   └── ...
+#     └── val/
+#         ├── img001.txt
+#         └── ...
+
+# Veri seti yolları (mutlak veya göreceli)
+# Colab için bu yolları güncellemeyi unutmayın!
+path: data  # Veri seti kök dizini
+train: images/train  # Train görüntüleri (path'e göreceli)
+val: images/val  # Validation görüntüleri (path'e göreceli)
+test:  # Test görüntüleri (opsiyonel)
+
+# Sınıflar
+names:
+  0: pothole  # Çukur sınıfı
+
+# Sınıf sayısı
+nc: 1
+
+# Segmentasyon formatı (YOLO segment format):
+# Her satır: class_id x1 y1 x2 y2 x3 y3 ... (normalize edilmiş polygon koordinatları)
+# Örnek: 0 0.5 0.3 0.6 0.35 0.65 0.4 0.6 0.45 0.5 0.4
+
+# Not: Label dosyaları görüntülerle aynı isme sahip olmalı (.txt uzantılı)
+# Örn: img001.jpg -> img001.txt
+
