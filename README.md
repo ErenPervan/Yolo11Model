@@ -53,7 +53,7 @@ Yolo11Model/
 
 ```bash
 # Repository'yi klonlayın
-git clone https://github.com/YOUR_USERNAME/Yolo11Model.git
+git clone https://github.com/ErenPervan/Yolo11Model.git
 cd Yolo11Model
 
 # Bağımlılıkları kurun
@@ -189,5 +189,5 @@ Pull request'ler kabul edilmektedir. Büyük değişiklikler için önce bir iss
 
 ---
 
-**Created with ❤️ for safer roads**
+**Created with Eren Pervan for safer roads**
 
